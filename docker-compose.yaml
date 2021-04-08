@@ -1,0 +1,22 @@
+version: '3.3'
+services:
+  webapp:
+    image: mdnmdn/golang-compile-daemon:1.15-alpine
+    ports:
+      - 8002:8001
+      - 2345:2345
+    volumes:
+      - .:/app
+      - testmods:/go/pkg/mod
+    environment:
+      PORT: "8001"
+      GO_HOST: 0.0.0.0
+      GO_ENV: development
+      GO_DEBUG: 1
+    command: CompileDaemon -color=true -build "echo restarting" -command "sh ./_scripts/run-dlv.sh"
+  chromedp:
+    image: chromedp/headless-shell
+    ports:
+      - 9224:9222
+volumes:
+  testmods:
